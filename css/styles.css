@@ -1,0 +1,51 @@
+:root {
+  --color-dark: #65594C;
+  --color-cream: #E8DFCA;
+  --color-sage: #8A9A86;
+  --color-light: #FAF7F2;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-dark);
+}
+
+#vis-canvas {
+  width: 100%;
+  height: 384px;
+  background-color: var(--color-light);
+  border: 1px solid #D6CEBE;
+  border-radius: 0.5rem;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C4B9A5;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-dark);
+}
+
+.modulo-content {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Matemática Discreta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#65594C',
+                            cream: '#E8DFCA',
+                            sage: '#8A9A86',
+                            light: '#FAF7F2'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-brand-cream text-brand-dark font-sans min-h-screen flex">
+    
+    <aside class="w-72 bg-brand-dark text-white flex flex-col p-5 shadow-lg">
+        <h1 class="text-xl font-bold mb-1 text-brand-cream">Matemática Discreta</h1>
+        <p class="text-xs text-brand-cream/70 mb-6">Proyecto final 2026</p>
+        <nav class="space-y-2 flex-1">
+            <button id="nav-conjuntos" onclick="navegarAModulo('conjuntos')" class="nav-btn w-full text-left px-4 py-2.5 rounded-lg transition bg-brand-sage font-semibold shadow-sm">
+                <span>1. Conjuntos</span>
+            </button>
+            <button id="nav-combinatoria" onclick="navegarAModulo('combinatoria')" class="nav-btn w-full text-left px-4 py-2.5 rounded-lg transition hover:bg-brand-sage/40">
+                <span>2. Combinatoria</span>
+            </button>
+            <button id="nav-recursividad" onclick="navegarAModulo('recursividad')" class="nav-btn w-full text-left px-4 py-2.5 rounded-lg transition hover:bg-brand-sage/40">
+                <span>3. Recursividad</span>
+            </button>
+            <button id="nav-division" onclick="navegarAModulo('division')" class="nav-btn w-full text-left px-4 py-2.5 rounded-lg transition hover:bg-brand-sage/40">
+                <span>4. División</span>
+            </button>
+            <button id="nav-matrices" onclick="navegarAModulo('matrices')" class="nav-btn w-full text-left px-4 py-2.5 rounded-lg transition hover:bg-brand-sage/40">
+                <span>5. Matrices</span>
+            </button>
+            <button id="nav-grafosArboles" onclick="navegarAModulo('grafosArboles')" class="nav-btn w-full text-left px-4 py-2.5 rounded-lg transition hover:bg-brand-sage/40">
+                <span>6. Grafos y Árboles</span>
+            </button>
+            <button onclick="cerrarAplicacion()" class="w-full text-left px-4 py-2.5 rounded-lg bg-rose-800 hover:bg-rose-900 transition mt-4">
+                <span>7. Salir</span>
+            </button>   
+        </nav>
+        <div class="mt-auto pt-4 border-t border-brand-cream/20">
+            <h3 class="text-xs font-semibold text-brand-cream/80 uppercase tracking-wider mb-2">Última Operación</h3>
+            <div id="sidebar-historial-preview" class="text-xs text-brand-cream bg-black/20 p-2.5 rounded border border-brand-cream/20">
+                <p class="mb-1">No hay operaciones recientes.</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-8 overflow-y-auto">
+        
+        <!-- OPCIÓN 1: CONJUNTOS -->
+        <section id="sec-conjuntos" class="modulo-content space-y-6">
+            <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20">
+                <h2 class="text-2xl font-bold text-brand-dark mb-2">Opción 1. CONJUNTOS</h2>
+                <p class="text-brand-dark/80 text-sm mb-2">
+                    Un conjunto es una colección bien definida de objetos o elementos únicos.
+                </p>
+                <div class="text-xs text-brand-dark/70 space-y-1">
+                    <p>• <strong>Unión (A ∪ B):</strong> Une los elementos de A y B sin duplicados.</p>
+                    <p>• <strong>Intersección (A ∩ B):</strong> Muestra solo los elementos comunes en A y B.</p>
+                    <p>• <strong>Diferencia (A - B / B - A):</strong> Elementos que están en el primer conjunto pero no en el segundo.</p>
+                </div>
+            </div>
+
+            <div id="msg-error-conjuntos" class="text-rose-700 font-medium text-sm empty:hidden"></div>
+
+            <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-6">
+                <h3 class="text-lg font-bold text-brand-dark border-b border-brand-dark/10 pb-2">a. Creación de Conjuntos</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-brand-cream/40 p-4 rounded-lg border border-brand-dark/10 space-y-3">
+                        <h4 class="font-bold text-brand-dark">Conjunto A</h4>
+                        <div class="flex gap-2">
+                            <input type="number" id="cant-elem-a" min="1" max="20" value="4" class="w-20 px-3 py-1.5 border border-brand-dark/30 rounded text-sm bg-white">
+                            <select id="tipo-elem-a" class="px-3 py-1.5 border border-brand-dark/30 rounded text-sm bg-white">
+                                <option value="num">Números</option>
+                                <option value="char">Caracteres</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="crearConjunto('A', 'manual')" class="px-3 py-1.5 bg-brand-dark text-white text-xs rounded">Manual</button>
+                            <button onclick="crearConjunto('A', 'random')" class="px-3 py-1.5 bg-brand-sage text-white text-xs rounded">Random</button>
+                        </div>
+                        <div class="pt-2 text-sm">
+                            <span class="text-brand-dark/70">A = </span>
+                            <span id="display-conjunto-a" class="font-mono font-bold text-brand-dark">{ }</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-brand-cream/40 p-4 rounded-lg border border-brand-dark/10 space-y-3">
+                        <h4 class="font-bold text-brand-dark">Conjunto B</h4>
+                        <div class="flex gap-2">
+                            <input type="number" id="cant-elem-b" min="1" max="20" value="4" class="w-20 px-3 py-1.5 border border-brand-dark/30 rounded text-sm bg-white">
+                            <select id="tipo-elem-b" class="px-3 py-1.5 border border-brand-dark/30 rounded text-sm bg-white">
+                                <option value="num">Números</option>
+                                <option value="char">Caracteres</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="crearConjunto('B', 'manual')" class="px-3 py-1.5 bg-brand-dark text-white text-xs rounded">Manual</button>
+                            <button onclick="crearConjunto('B', 'random')" class="px-3 py-1.5 bg-brand-sage text-white text-xs rounded">Random</button>
+                        </div>
+                        <div class="pt-2 text-sm">
+                            <span class="text-brand-dark/70">B = </span>
+                            <span id="display-conjunto-b" class="font-mono font-bold text-brand-dark">{ }</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-4">
+                <h3 class="text-lg font-bold text-brand-dark border-b border-brand-dark/10 pb-2">b. Operaciones Básicas</h3>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="operarConjuntos('union')" class="px-4 py-2 bg-brand-sage text-white text-sm rounded hover:brightness-95">Unión (A ∪ B)</button>
+                    <button onclick="operarConjuntos('interseccion')" class="px-4 py-2 bg-brand-sage text-white text-sm rounded hover:brightness-95">Intersección (A ∩ B)</button>
+                    <button onclick="operarConjuntos('diffAB')" class="px-4 py-2 bg-brand-dark text-white text-sm rounded hover:brightness-110">Diferencia (A - B)</button>
+                    <button onclick="operarConjuntos('diffBA')" class="px-4 py-2 bg-brand-dark text-white text-sm rounded hover:brightness-110">Diferencia (B - A)</button>
+                </div>
+                <div class="mt-4 p-4 bg-brand-cream/30 rounded-lg border border-brand-dark/10">
+                    <div id="res-conjuntos" class="text-lg font-mono font-bold text-brand-dark">Esperando operación...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OPCIÓN 2: COMBINATORIA -->
+        <section id="sec-combinatoria" class="modulo-content hidden space-y-6">
+            <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20">
+                <h2 class="text-2xl font-bold text-brand-dark mb-2">Opción 2. COMBINATORIA</h2>
+                <p class="text-brand-dark/80 text-sm mb-2">
+                    Las <strong>permutaciones</strong> consideran la posición de los elementos. Las <strong>combinaciones</strong> calculan selecciones sin importar el orden.
+                </p>
+                <p class="text-xs text-brand-dark/60">Todos los datos deben ser enteros positivos.</p>
+            </div>
+
+            <div id="msg-error-combinatoria" class="text-rose-700 font-medium text-sm empty:hidden"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-3">
+                    <h3 class="font-bold text-brand-dark border-b border-brand-dark/10 pb-1">a. Permutaciones Simples</h3>
+                    <p class="text-xs text-brand-dark/60">Fórmula: P(n,r) = n! / (n-r)!</p>
+                    <div class="flex gap-2">
+                        <input type="number" id="ps-n" placeholder="n" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                        <input type="number" id="ps-r" placeholder="r" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    </div>
+                    <button onclick="calcPermutacionSimple()" class="w-full py-2 bg-brand-dark text-white text-sm rounded">Calcular</button>
+                    <div id="res-ps" class="font-mono font-bold text-brand-dark pt-1"></div>
+                </div>
+
+                <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-3">
+                    <h3 class="font-bold text-brand-dark border-b border-brand-dark/10 pb-1">b. Combinaciones Simples</h3>
+                    <p class="text-xs text-brand-dark/60">Fórmula: C(n,r) = n! / (r!(n-r)!)</p>
+                    <div class="flex gap-2">
+                        <input type="number" id="cs-n" placeholder="n" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                        <input type="number" id="cs-r" placeholder="r" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    </div>
+                    <button onclick="calcCombinacionSimple()" class="w-full py-2 bg-brand-dark text-white text-sm rounded">Calcular</button>
+                    <div id="res-cs" class="font-mono font-bold text-brand-dark pt-1"></div>
+                </div>
+
+                <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-3">
+                    <h3 class="font-bold text-brand-dark border-b border-brand-dark/10 pb-1">c. Permutaciones con Repetición</h3>
+                    <p class="text-xs text-brand-dark/60">Fórmula: P = n! / (n1! * n2! * ... * nk!)</p>
+                    <input type="number" id="pr-n" placeholder="n (total)" class="w-full p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    <input type="text" id="pr-k" placeholder="Repeticiones n1, n2, nk (ej: 2, 3, 1)" class="w-full p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    <button onclick="calcPermutacionRepeticion()" class="w-full py-2 bg-brand-dark text-white text-sm rounded">Calcular</button>
+                    <div id="res-pr" class="font-mono font-bold text-brand-dark pt-1"></div>
+                </div>
+
+                <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-3">
+                    <h3 class="font-bold text-brand-dark border-b border-brand-dark/10 pb-1">d. Combinaciones con Repetición</h3>
+                    <p class="text-xs text-brand-dark/60">Fórmula: C(n+r-1, r)</p>
+                    <div class="flex gap-2">
+                        <input type="number" id="cr-n" placeholder="n" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                        <input type="number" id="cr-r" placeholder="r" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    </div>
+                    <button onclick="calcCombinacionRepeticion()" class="w-full py-2 bg-brand-dark text-white text-sm rounded">Calcular</button>
+                    <div id="res-cr" class="font-mono font-bold text-brand-dark pt-1"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OPCIÓN 3: RECURSIVIDAD -->
+        <section id="sec-recursividad" class="modulo-content hidden space-y-6">
+            <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20">
+                <h2 class="text-2xl font-bold text-brand-dark mb-2">Opción 3. RECURSIVIDAD</h2>
+                <p class="text-brand-dark/80 text-sm">
+                    La recursividad es un método donde una función se llama a sí misma para resolver instancias reducidas de un problema.
+                </p>
+            </div>
+
+            <div id="msg-error-recursividad" class="text-rose-700 font-medium text-sm empty:hidden"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-3">
+                    <h3 class="font-bold text-brand-dark border-b border-brand-dark/10 pb-1">a) Factorial</h3>
+                    <p class="text-xs text-brand-dark/60">Rango: 1 a 50</p>
+                    <input type="number" id="fac-n" min="1" max="50" placeholder="Número (1-50)" class="w-full p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    <button onclick="calcFactorial()" class="w-full py-2 bg-brand-dark text-white text-sm rounded">Calcular</button>
+                    <div id="res-factorial" class="font-mono font-bold text-brand-dark pt-1 text-xs break-all"></div>
+                </div>
+
+                <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-3">
+                    <h3 class="font-bold text-brand-dark border-b border-brand-dark/10 pb-1">b) Suma Traspaso (a + b)</h3>
+                    <p class="text-xs text-brand-dark/60">Rango: 1 a 10 (A > B)</p>
+                    <div class="flex gap-2">
+                        <input type="number" id="sum-a" min="1" max="10" placeholder="A" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                        <input type="number" id="sum-b" min="1" max="10" placeholder="B" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    </div>
+                    <button onclick="calcSumaTraspaso()" class="w-full py-2 bg-brand-dark text-white text-sm rounded">Ejecutar</button>
+                    <div id="res-traspaso" class="font-mono text-xs text-brand-dark space-y-1 pt-1"></div>
+                </div>
+
+                <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-3">
+                    <h3 class="font-bold text-brand-dark border-b border-brand-dark/10 pb-1">c) Pirámide Fibonacci</h3>
+                    <p class="text-xs text-brand-dark/60">Términos: 5 a 20</p>
+                    <input type="number" id="fib-n" min="5" max="20" placeholder="Términos (5-20)" class="w-full p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    <button onclick="calcFibonacciPiramide()" class="w-full py-2 bg-brand-dark text-white text-sm rounded">Generar</button>
+                </div>
+            </div>
+
+            <div id="container-fib-piramide" class="hidden bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20">
+                <h4 class="font-bold text-brand-dark mb-2">Resultado Pirámide:</h4>
+                <pre id="res-fibonacci" class="font-mono text-center text-sm text-brand-dark bg-brand-cream/40 p-4 rounded overflow-x-auto leading-relaxed border border-brand-dark/10"></pre>
+            </div>
+        </section>
+
+        <!-- OPCIÓN 4: DIVISIÓN -->
+        <section id="sec-division" class="modulo-content hidden space-y-6">
+            <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20">
+                <h2 class="text-2xl font-bold text-brand-dark mb-2">Opción 4. DIVISIÓN Y TEOREMA 6</h2>
+                <p class="text-brand-dark/80 text-sm mb-1">
+                    Un <strong>número primo</strong> es divisible únicamente entre 1 y sí mismo. El <strong>Teorema 6</strong> establece la relación: MCD(a,b) * MCM(a,b) = a * b.
+                </p>
+            </div>
+
+            <div id="msg-error-division" class="text-rose-700 font-medium text-sm empty:hidden"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-3">
+                    <h3 class="font-bold text-brand-dark border-b border-brand-dark/10 pb-1">a) Algoritmo Número Primo</h3>
+                    <p class="text-xs text-brand-dark/60">Entero menor a 1000</p>
+                    <input type="number" id="primo-n" max="999" placeholder="Número (< 1000)" class="w-full p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    <button onclick="verificarPrimoPasoAPaso()" class="w-full py-2 bg-brand-dark text-white text-sm rounded">Demostrar Paso a Paso</button>
+                    <div id="res-primo-pasos" class="font-mono text-xs bg-brand-cream/30 p-3 rounded max-h-48 overflow-y-auto space-y-1 border border-brand-dark/10"></div>
+                </div>
+
+                <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-3">
+                    <h3 class="font-bold text-brand-dark border-b border-brand-dark/10 pb-1">b) MCD, MCM y Teorema 6</h3>
+                    <p class="text-xs text-brand-dark/60">Dos números enteros menores a 500</p>
+                    <div class="flex gap-2">
+                        <input type="number" id="teo-a" max="499" placeholder="A (< 500)" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                        <input type="number" id="teo-b" max="499" placeholder="B (< 500)" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    </div>
+                    <button onclick="calcTeorema6()" class="w-full py-2 bg-brand-dark text-white text-sm rounded">Calcular MCD y MCM</button>
+                    <div id="res-mcd-mcm" class="font-mono text-xs bg-brand-cream/30 p-3 rounded space-y-1 border border-brand-dark/10"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OPCIÓN 5: MATRICES -->
+        <section id="sec-matrices" class="modulo-content hidden space-y-6">
+            <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20">
+                <h2 class="text-2xl font-bold text-brand-dark mb-2">Opción 5. MATRICES</h2>
+                <p class="text-brand-dark/80 text-sm">
+                    Una matriz es una estructura rectangular de números. Operaciones soportadas: Suma y Producto con verificación de identidad.
+                </p>
+            </div>
+
+            <div id="msg-error-matrices" class="text-rose-700 font-medium text-sm empty:hidden"></div>
+
+            <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-4">
+                <div class="flex flex-wrap items-center gap-3">
+    <label class="text-sm font-bold text-brand-dark">Dimensión:</label>
+    <select id="mat-dimension" class="p-2 border border-brand-dark/30 rounded text-sm bg-white">
+        <option value="3">3 x 3</option>
+        <option value="4">4 x 4</option>
+        <option value="5">5 x 5</option>
+    </select>
+    <button onclick="generarMatrices()" class="px-4 py-2 bg-brand-sage text-white text-sm rounded hover:brightness-95">Generar Aleatorias (1-10)</button>
+    <button onclick="operarMatrices('suma')" class="px-3 py-2 bg-brand-dark text-white text-sm rounded hover:brightness-110">Sumar (A+B)</button>
+    <button onclick="operarMatrices('resta')" class="px-3 py-2 bg-brand-dark text-white text-sm rounded hover:brightness-110">Restar (A-B)</button>
+    <button onclick="operarMatrices('producto')" class="px-3 py-2 bg-brand-dark text-white text-sm rounded hover:brightness-110">Multiplicar (A×B)</button>
+    <button onclick="operarMatrices('division')" class="px-3 py-2 bg-brand-dark text-white text-sm rounded hover:brightness-110">Dividir (A×B⁻¹)</button>
+</div>
+
+                <div id="status-matrices-identicas" class="text-sm font-bold p-2 rounded hidden"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                    <div>
+                        <h4 class="font-bold text-xs uppercase text-brand-dark/70 mb-2">Matriz A</h4>
+                        <div id="container-matriz-a" class="overflow-x-auto"></div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs uppercase text-brand-dark/70 mb-2">Matriz B</h4>
+                        <div id="container-matriz-b" class="overflow-x-auto"></div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs uppercase text-brand-dark/70 mb-2">Matriz Resultante</h4>
+                        <div id="container-matriz-res" class="overflow-x-auto"></div>
+                    </div>
+                </div>
+            </div>
+        </section>  
+
+        <!-- OPCIÓN 6: GRAFOS Y ÁRBOLES -->
+        <section id="sec-grafosArboles" class="modulo-content hidden space-y-6">
+            <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20">
+                <h2 class="text-2xl font-bold text-brand-dark mb-2">Opción 6. GRAFOS Y ÁRBOLES BINARIOS</h2>
+                <p class="text-brand-dark/80 text-sm">
+                    Generación interactiva de estructuras no lineales con recorridos visuales (Pre-orden, In-orden, Post-orden).
+                </p>
+            </div>
+
+            <div id="msg-error-grafos" class="text-rose-700 font-medium text-sm empty:hidden"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-3">
+                    <h3 class="font-bold text-brand-dark border-b border-brand-dark/10 pb-1">a) Generar Grafo</h3>
+                    <input type="number" id="grafo-v" placeholder="Número de Vértices" class="w-full p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    <input type="text" id="grafo-f" placeholder="Funciones / Aristas (ej: 1-2, 2-3, 3-1)" class="w-full p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    <button onclick="generarGrafoVis()" class="w-full py-2 bg-brand-dark text-white text-sm rounded">Renderizar Grafo</button>
+                </div>
+
+                <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-3">
+                    <h3 class="font-bold text-brand-dark border-b border-brand-dark/10 pb-1">b) Generar Árbol Binario</h3>
+                    <div class="flex gap-2">
+                        <input type="number" id="arbol-v" placeholder="Vértices" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                        <input type="number" id="arbol-n" placeholder="Niveles" class="w-1/2 p-2 border border-brand-dark/30 rounded text-sm bg-white">
+                    </div>
+                    <button onclick="generarArbolVis()" class="w-full py-2 bg-brand-sage text-white text-sm rounded">Renderizar Árbol</button>
+                    <div class="flex gap-1 pt-1">
+                        <button onclick="ejecutarRecorrido('pre')" class="w-1/3 py-1 bg-brand-dark text-white text-xs rounded">Pre-orden</button>
+                        <button onclick="ejecutarRecorrido('in')" class="w-1/3 py-1 bg-brand-dark text-white text-xs rounded">In-orden</button>
+                        <button onclick="ejecutarRecorrido('post')" class="w-1/3 py-1 bg-brand-dark text-white text-xs rounded">Post-orden</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-brand-light p-6 rounded-xl shadow-sm border border-brand-dark/20 space-y-2">
+                <div id="res-recorrido-texto" class="font-mono text-sm font-bold text-brand-dark"></div>
+                <div id="vis-canvas" class="w-full h-96 border border-brand-dark/20 rounded-lg bg-brand-light"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/storage.js"></script>
+    <script src="js/modules/conjuntos.js"></script>
+    <script src="js/modules/combinatoria.js"></script>
+    <script src="js/modules/recursividad.js"></script>
+    <script src="js/modules/division.js"></script>
+    <script src="js/modules/matrices.js"></script>
+    <script src="js/modules/grafosArboles.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
